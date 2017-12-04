@@ -19,12 +19,18 @@ namespace AntGame.GameObjects
 
         public bool selected = false;
 
+        FoodPellet targetPellet = null;
+
+        public Colony.AntTeams myTeam = Colony.AntTeams.kTeamNone;
 
         enum MoveStatus
         {
             kOrbiting,
             kMoving,
-            kGoingToOrbit
+            kGoingToOrbit,
+            kToPellet,
+            kAtPellet,
+            kToColony
         }
 
         MoveStatus currentMove = MoveStatus.kMoving;
@@ -99,11 +105,77 @@ namespace AntGame.GameObjects
                     }
                 }
             }
-            else
+            else if(currentMove == MoveStatus.kOrbiting)
             {
                 Orbit(gt);
             }
+            else if(currentMove == MoveStatus.kToPellet)
+            {
+                if(targetPellet != null)
+                {
+                    if(Vector2.Distance(this._Position, targetPellet._Position) < 5)
+                    {
+                        currentMove = MoveStatus.kAtPellet;
+                        targetPellet.addAnt(this);
+                    }
+                    else
+                    {
+                        int speed = 50;
+                        if (targetPellet._Position.X < this._Position.X)
+                        {
+                            this._Position.X -= (float)(speed * gt.ElapsedGameTime.TotalSeconds);
+                        }
+                        else
+                        {
+                            this._Position.X += (float)(speed * gt.ElapsedGameTime.TotalSeconds);
+                        }
 
+                        if (targetPellet._Position.Y < this._Position.Y)
+                        {
+                            this._Position.Y -= (float)(speed * gt.ElapsedGameTime.TotalSeconds);
+                        }
+                        else
+                        {
+                            this._Position.Y += (float)(speed * gt.ElapsedGameTime.TotalSeconds);
+                        }
+                    }
+                }
+            }
+            else if(currentMove == MoveStatus.kAtPellet)
+            {
+                if(targetPellet != null)
+                {
+                    float offsetX = (float)(Math.Sin(seed) * orbitRadius);
+                    float offsetY = (float)(Math.Cos(seed) * orbitRadius);
+                    currentPoint.X = (targetPellet._Position.X + offsetX);
+                    currentPoint.Y = targetPellet._Position.Y + offsetY;
+                }
+
+                int speed = 50;
+                if (targetPellet._Position.X < this._Position.X)
+                {
+                    this._Position.X -= (float)(speed * gt.ElapsedGameTime.TotalSeconds);
+                }
+                else
+                {
+                    this._Position.X += (float)(speed * gt.ElapsedGameTime.TotalSeconds);
+                }
+
+                if (targetPellet._Position.Y < this._Position.Y)
+                {
+                    this._Position.Y -= (float)(speed * gt.ElapsedGameTime.TotalSeconds);
+                }
+                else
+                {
+                    this._Position.Y += (float)(speed * gt.ElapsedGameTime.TotalSeconds);
+                }
+                if (targetPellet._CurrentState == SpriteState.kStateInActive)
+                {
+                    SetOrbitPoint(this._Position);
+                    CalculateOrbit(gt);
+                    currentMove = MoveStatus.kMoving;
+                }
+            }
             base.UpdateActive(gt);
         }
 
@@ -162,6 +234,12 @@ namespace AntGame.GameObjects
             orbitSpeed = (float)(num / 10.0);
 
             orbitRadius = newRan.Next(16, 64);
+        }
+
+        public void SetPellet(FoodPellet p)
+        {
+            targetPellet = p;
+            currentMove = MoveStatus.kToPellet;
         }
     }
 }

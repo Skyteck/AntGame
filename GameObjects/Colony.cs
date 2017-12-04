@@ -12,10 +12,20 @@ namespace AntGame.GameObjects
         public double SpawnTimer = 5.0f;
         public int currentHP = 10;
         
+        public enum AntTeams
+        {
+            kTeamGreen,
+            kTeamBrown,
+            kTeamNone
+        }
+
+        public AntTeams myTeam = AntTeams.kTeamNone;
+
         protected override void UpdateActive(GameTime gameTime)
         {
             SpawnTimer -= gameTime.ElapsedGameTime.TotalSeconds;
             base.UpdateActive(gameTime);
         }
+        
     }
 }

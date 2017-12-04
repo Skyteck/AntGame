@@ -4,35 +4,35 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/attackAxe.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/axe.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/Banker.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/ClearBox.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/Collision.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/Corner.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/Effect.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/Fire.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/FishingHole.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/fishItem.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/fishSelected.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/FishStickItem.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/inventoryBG.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/inventoryBG2.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/itemSlotNormal.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/itemSlotSelected.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/LavaTile.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/logItem.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/MatchesItem.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/Nulltexture.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/oreItem.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/Player.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/rock.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/Slime.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/SlimeShot.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/StrawberryItem.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/StrawberryPlant.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/Sword.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/tree.png</File>
-    <File>D:/Gamedev/Monogame/AntGame/AntGame/Content/Art/WhiteTexture.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/attackAxe.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/axe.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/Banker.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/ClearBox.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/Collision.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/Corner.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/Effect.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/Fire.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/FishingHole.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/fishItem.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/fishSelected.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/FishStickItem.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/inventoryBG.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/inventoryBG2.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/itemSlotNormal.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/itemSlotSelected.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/LavaTile.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/logItem.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/MatchesItem.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/Nulltexture.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/oreItem.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/Player.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/rock.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/Slime.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/SlimeShot.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/StrawberryItem.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/StrawberryPlant.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/Sword.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/tree.png</File>
+    <File>C:/Users/Richard.Ellzy/Desktop/New folder/AntGame/Content/Art/WhiteTexture.png</File>
   </SourceFiles>
 </SourceFileCollection>

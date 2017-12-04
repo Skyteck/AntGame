@@ -44,6 +44,8 @@
     <Compile Include="Game1.cs" />
     <Compile Include="GameObjects\Ant.cs" />
     <Compile Include="GameObjects\Colony.cs" />
+    <Compile Include="GameObjects\FoodPellet.cs" />
+    <Compile Include="GameObjects\Queen.cs" />
     <Compile Include="HelperFunctions.cs" />
     <Compile Include="InputHelper.cs" />
     <Compile Include="Program.cs" />
