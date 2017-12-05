@@ -38,7 +38,7 @@ namespace AntGame.GameObjects
 
                 if(this._BoundingBox.Intersects(targetColony._BoundingBox))
                 {
-                    targetColony.myTeam = this.myTeam;
+                    targetColony.ChangeTeam(myTeam);
                 }
             }
 

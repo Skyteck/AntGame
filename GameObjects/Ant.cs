@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace AntGame.GameObjects
 {
@@ -17,11 +19,23 @@ namespace AntGame.GameObjects
         float orbitSpeed;
         bool orbitClockwise = true;
 
+
+        Texture2D _GreenTex;
+        Texture2D _BrownTex;
+        Texture2D _NoneTex;
+
         public bool selected = false;
 
         FoodPellet targetPellet = null;
 
-        public Colony.AntTeams myTeam = Colony.AntTeams.kTeamNone;
+        public Colony.AntTeams myTeam { get; private set; } = Colony.AntTeams.kTeamNone;
+
+        internal void LoadContent(ContentManager content)
+        {
+            _GreenTex = content.Load<Texture2D>(@"Art/SlimeShot");
+            _BrownTex = content.Load<Texture2D>(@"Art/logItem");
+            _NoneTex = content.Load<Texture2D>(@"Art/axe");
+        }
 
         enum MoveStatus
         {
@@ -41,6 +55,14 @@ namespace AntGame.GameObjects
             ChangeOrbit();
         }
 
+        public void ActivateTeam(Colony.AntTeams team, Vector2 pos)
+        {
+            ChangeTeam(team);
+            this._Position = pos;
+            this.SetOrbitPoint(pos);
+            base.Activate();
+        }
+
         protected override void UpdateActive(GameTime gt)
         {
             if(currentMove == MoveStatus.kMoving)
@@ -48,7 +70,7 @@ namespace AntGame.GameObjects
                 //check if within orbitradius of orbitPoint
                 //if in radius change to orbiting
                 //else move to point
-                if (Vector2.Distance(this._Position, orbitPoint) < 64)
+                if (Vector2.Distance(this._Position, orbitPoint) < 16)
                 {
                     currentMove = MoveStatus.kGoingToOrbit;
                 }
@@ -204,6 +226,7 @@ namespace AntGame.GameObjects
             currentPoint.X = (orbitPoint.X + offsetX);
             currentPoint.Y = orbitPoint.Y + offsetY;
         }
+
         public void SetOrbitPoint(Vector2 pos)
         {
             orbitPoint = pos;
@@ -240,6 +263,33 @@ namespace AntGame.GameObjects
         {
             targetPellet = p;
             currentMove = MoveStatus.kToPellet;
+        }
+
+        public void ChangeTeam(Colony.AntTeams team)
+        {
+            myTeam = team;
+            if (team == Colony.AntTeams.kTeamBrown)
+            {
+                this._Texture = _BrownTex;
+            }
+            else if (team == Colony.AntTeams.kTeamGreen)
+            {
+                this._Texture = _GreenTex;
+            }
+            else if (team == Colony.AntTeams.kTeamNone)
+            {
+                this._Texture = _NoneTex;
+            }
+
+
+            frameHeight = _Texture.Height;
+            frameWidth = _Texture.Width;
+        }
+
+        public void Die()
+        {
+            this.Deactivate();
+            ChangeTeam(Colony.AntTeams.kTeamNone);
         }
     }
 }

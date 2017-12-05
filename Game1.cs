@@ -25,7 +25,8 @@ namespace AntGame
         bool typingMode = false;
         int currentQueens = 0;
         //Managers
-
+        Managers.ColonyManager _ColonyManager;
+        Managers.AntManager _AntManager;
 
         //UI 
         Vector2 mouseClickPos = new Vector2(0, 0);
@@ -81,6 +82,8 @@ namespace AntGame
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             Window.AllowUserResizing = true;
+
+
             AntList = new List<GameObjects.Ant>();
             ColonyList = new List<GameObjects.Colony>();
             SelectedAnts = new List<GameObjects.Ant>();
@@ -104,6 +107,11 @@ namespace AntGame
             camera = new Camera(GraphicsDevice);
             camera.Position = new Vector2(240, 160);
 
+
+            _AntManager = new Managers.AntManager();
+            _ColonyManager = new Managers.ColonyManager(_AntManager);
+            _AntManager.SetColonyManager(_ColonyManager);
+
             InputHelper.Init(camera);
             base.Initialize();
 
@@ -118,53 +126,22 @@ namespace AntGame
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            // TODO: use this.Content to load your game content here
             _SelectTex = Content.Load<Texture2D>(@"Art/WhiteTexture");
 
+            _ColonyManager.CreateColonies(Content);
+            _AntManager.CreateAnts(Content);
 
-            GameObjects.Colony newColony1 = new GameObjects.Colony();
-            newColony1._Position = new Vector2(-100, 55);
-            newColony1.LoadContent(@"Art/Fire", Content);
-            newColony1.myTeam = GameObjects.Colony.AntTeams.kTeamGreen;
-            ColonyList.Add(newColony1);
+            _ColonyManager.PlaceColony(new Vector2(-90, 55), GameObjects.Colony.AntTeams.kTeamGreen);
+            _ColonyManager.PlaceColony(new Vector2(-99, 166), GameObjects.Colony.AntTeams.kTeamGreen);
+            _ColonyManager.PlaceColony(new Vector2(-106, 248), GameObjects.Colony.AntTeams.kTeamGreen);
 
-            GameObjects.Colony newColony2 = new GameObjects.Colony();
-            newColony2._Position = new Vector2(-101, 164);
-            newColony2.LoadContent(@"Art/Fire", Content);
-            newColony1.myTeam = GameObjects.Colony.AntTeams.kTeamGreen;
-            ColonyList.Add(newColony2);
+            _ColonyManager.PlaceColony(new Vector2(364, 76), GameObjects.Colony.AntTeams.kTeamBrown);
+            _ColonyManager.PlaceColony(new Vector2(419, 130), GameObjects.Colony.AntTeams.kTeamBrown);
+            _ColonyManager.PlaceColony(new Vector2(356, 194), GameObjects.Colony.AntTeams.kTeamBrown);
 
-            GameObjects.Colony newColony3 = new GameObjects.Colony();
-            newColony3._Position = new Vector2(-108, 287);
-            newColony3.LoadContent(@"Art/Fire", Content);
-            newColony1.myTeam = GameObjects.Colony.AntTeams.kTeamGreen;
-            ColonyList.Add(newColony3);
-
-
-            GameObjects.Colony newColony4 = new GameObjects.Colony();
-            newColony1._Position = new Vector2(364, 76);
-            newColony1.LoadContent(@"Art/LavaTile", Content);
-            newColony1.myTeam = GameObjects.Colony.AntTeams.kTeamBrown;
-            BadColonies.Add(newColony1);
-
-            GameObjects.Colony newColony5 = new GameObjects.Colony();
-            newColony2._Position = new Vector2(419, 130);
-            newColony2.LoadContent(@"Art/LavaTile", Content);
-            newColony1.myTeam = GameObjects.Colony.AntTeams.kTeamBrown;
-            BadColonies.Add(newColony2);
-
-            GameObjects.Colony newColony6 = new GameObjects.Colony();
-            newColony3._Position = new Vector2(356, 194);
-            newColony3.LoadContent(@"Art/LavaTile", Content);
-            newColony1.myTeam = GameObjects.Colony.AntTeams.kTeamBrown;
-            BadColonies.Add(newColony3);
-
-
-
-            GameObjects.Colony newColony7 = new GameObjects.Colony();
-            newColony3._Position = new Vector2(0, 150);
-            newColony3.LoadContent(@"Art/FishingHole", Content);
-            newColony1.myTeam = GameObjects.Colony.AntTeams.kTeamNone;
-            NeutralColonies.Add(newColony3);
+            _ColonyManager.PlaceColony(new Vector2(0, 150), GameObjects.Colony.AntTeams.kTeamNone);
 
 
             for (int i = 0; i < 10; i++)
@@ -176,7 +153,6 @@ namespace AntGame
             }
 
 
-            // TODO: use this.Content to load your game content here
         }
 
 
@@ -209,128 +185,29 @@ namespace AntGame
                 ProcessMouse(gameTime);
                 ProcessKeyboard(gameTime);
 
-                foreach (GameObjects.Ant ant in AntList)
-                {
-                    ant.Update(gameTime);
-
-                    foreach(GameObjects.Ant b in BadAnts)
-                    {
-                        if(b._BoundingBox.Intersects(ant._BoundingBox))
-                        {
-                            b._CurrentState = Sprite.SpriteState.kStateInActive;
-                            ant._CurrentState = Sprite.SpriteState.kStateInActive;
-                        }
-                    }
-
-                    foreach(GameObjects.Colony c in BadColonies)
-                    {
-                        if(c._CurrentState == Sprite.SpriteState.kStateActive && c._BoundingBox.Intersects(ant._BoundingBox))
-                        {
-                            c.currentHP--;
-                            if(c.currentHP <= 0)
-                            {
-                                c._CurrentState = Sprite.SpriteState.kStateInActive;
-                            }
-                            ant._CurrentState = Sprite.SpriteState.kStateInActive;
-                        }
-                    }
-                }
-
-
-                foreach (GameObjects.Colony c in ColonyList)
-                {
-                    c.Update(gameTime);
-
-                    if(c.SpawnTimer <= 0.0f)
-                    {
-                        GameObjects.Ant newAnt = new GameObjects.Ant();
-                        newAnt._Position = c._Position;
-                        newAnt.SetOrbitPoint(c._Position);
-                        newAnt.LoadContent(@"Art/SlimeShot", Content);
-                        newAnt.myTeam = c.myTeam;
-                        AntList.Add(newAnt);
-                        c.SpawnTimer = 5.0f;
-                    }
-                }
-
-                foreach (GameObjects.Ant ant in BadAnts)
-                {
-                    ant.Update(gameTime);
-                }
-
-                foreach (GameObjects.Colony c in BadColonies)
-                {
-                    c.Update(gameTime);
-                    if (c.SpawnTimer <= 0.0f)
-                    {
-                        GameObjects.Ant newAnt = new GameObjects.Ant();
-                        newAnt._Position = c._Position;
-                        newAnt.SetOrbitPoint(c._Position);
-                        newAnt.LoadContent(@"Art/logItem", Content);
-                        newAnt.myTeam = c.myTeam;
-                        BadAnts.Add(newAnt);
-                        c.SpawnTimer = 5.0f;
-                    }
-                }
-
-                foreach(GameObjects.FoodPellet p in PelletList)
-                {
-                    p.Update(gameTime);
-                    if(p.atColony)
-                    {
-                        p._CurrentState = Sprite.SpriteState.kStateInActive;
-                        currentQueens++;
-                    }
-                    if(p.FindColony && p.targetColony == null)
-                    {
-                        GameObjects.Colony closestColony = ColonyList[0];
-
-                        foreach(GameObjects.Colony c in ColonyList)
-                        {
-                            if(Vector2.Distance(p._Position, closestColony._Position) > Vector2.Distance(p._Position, c._Position))
-                            {
-                                closestColony = c;
-                            }
-                        }
-
-                        p.setColony(closestColony);
-                    }
-                }
-
-                foreach(GameObjects.Queen q in QueenList)
-                {
-                    q.Update(gameTime);
-                }
-
-
-                AntList.RemoveAll(x => x._CurrentState == Sprite.SpriteState.kStateInActive);
-                BadAnts.RemoveAll(x => x._CurrentState == Sprite.SpriteState.kStateInActive);
-                BadColonies.RemoveAll(x => x._CurrentState == Sprite.SpriteState.kStateInActive);
-                PelletList.RemoveAll(x => x._CurrentState == Sprite.SpriteState.kStateInActive);
-
+                _AntManager.Update(gameTime);
+                _ColonyManager.Update(gameTime);
+                
+                //TODO: Add way for pellets to update and find closest colony of the correct team
+                // way to update queens
 
                 base.Update(gameTime);
                 ProcessCamera(gameTime);
-
-                //Show FPS
-                if ((1 / gameTime.ElapsedGameTime.TotalSeconds) <= 59)
-                {
-                    Console.WriteLine("BAD FPS!!!!!!!!!!");
-                }
+                
             }
         }
 
         private void ProcessKeyboard(GameTime gameTime)
         {
 
-            //if (InputHelper.IsKeyPressed(Keys.Space))
-            //{
-            //    GameObjects.Colony newColony = new GameObjects.Colony();
-            //    newColony._Position = InputHelper.MouseWorldPos;
-            //    newColony.LoadContent(@"Art/Fire", Content);
-            //    ColonyList.Add(newColony);
-            //    Console.WriteLine(InputHelper.MouseWorldPos);
-            //}
+            if (InputHelper.IsKeyPressed(Keys.Space))
+            {
+                //GameObjects.Colony newColony = new GameObjects.Colony();
+                //newColony._Position = InputHelper.MouseWorldPos;
+                //newColony.LoadContent(@"Art/Fire", Content);
+                //ColonyList.Add(newColony);
+                Console.WriteLine(InputHelper.MouseWorldPos);
+            }
 
             //if (InputHelper.IsKeyPressed(Keys.H))
             //{
@@ -340,7 +217,7 @@ namespace AntGame
             //    BadColonies.Add(newColony);
             //}
 
-            if(InputHelper.IsKeyPressed(Keys.Q))
+            if (InputHelper.IsKeyPressed(Keys.Q))
             {
                 if(currentQueens >= 1)
                 {
@@ -413,7 +290,7 @@ namespace AntGame
 
         private void CheckSelectedAnts()
         {
-            foreach(GameObjects.Ant a in AntList)
+            foreach(GameObjects.Ant a in _AntManager.GetAntsOnTeam(GameObjects.Colony.AntTeams.kTeamGreen))
             {
                 if(a._BoundingBox.Intersects(SelectRect))
                 {
@@ -439,37 +316,9 @@ namespace AntGame
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin(camera);
 
+            _ColonyManager.Draw(spriteBatch);
+            _AntManager.Draw(spriteBatch);
 
-
-            foreach (GameObjects.Colony c in ColonyList)
-            {
-                c.Draw(spriteBatch);
-            }
-
-            foreach (GameObjects.Ant ant in AntList)
-            {
-                ant.Draw(spriteBatch);
-            }
-
-            foreach (GameObjects.Colony c in BadColonies)
-            {
-                c.Draw(spriteBatch);
-            }
-
-            foreach (GameObjects.Ant ant in BadAnts)
-            {
-                ant.Draw(spriteBatch);
-            }
-
-            foreach(GameObjects.FoodPellet p in PelletList)
-            {
-                p.Draw(spriteBatch);
-            }
-
-            foreach(GameObjects.Queen q in QueenList)
-            {
-                q.Draw(spriteBatch);
-            }
             if (drawSelectRect) DrawSelectRect(spriteBatch);
 
             base.Draw(gameTime);
