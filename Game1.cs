@@ -27,6 +27,7 @@ namespace AntGame
         //Managers
         Managers.ColonyManager _ColonyManager;
         Managers.AntManager _AntManager;
+        Managers.FoodManager _FoodManager;
 
         //UI 
         Vector2 mouseClickPos = new Vector2(0, 0);
@@ -107,10 +108,10 @@ namespace AntGame
             camera = new Camera(GraphicsDevice);
             camera.Position = new Vector2(240, 160);
 
-
             _AntManager = new Managers.AntManager();
             _ColonyManager = new Managers.ColonyManager(_AntManager);
-            _AntManager.SetColonyManager(_ColonyManager);
+            _FoodManager = new Managers.FoodManager(_ColonyManager);
+            _AntManager.SetColonyManager(_ColonyManager, _FoodManager);
 
             InputHelper.Init(camera);
             base.Initialize();
@@ -133,24 +134,18 @@ namespace AntGame
             _ColonyManager.CreateColonies(Content);
             _AntManager.CreateAnts(Content);
 
-            _ColonyManager.PlaceColony(new Vector2(-90, 55), GameObjects.Colony.AntTeams.kTeamGreen);
-            _ColonyManager.PlaceColony(new Vector2(-99, 166), GameObjects.Colony.AntTeams.kTeamGreen);
-            _ColonyManager.PlaceColony(new Vector2(-106, 248), GameObjects.Colony.AntTeams.kTeamGreen);
+            _ColonyManager.PlaceColony(new Vector2(-20, 55), GameObjects.Colony.AntTeams.kTeamGreen);
+            _ColonyManager.PlaceColony(new Vector2(-29, 166), GameObjects.Colony.AntTeams.kTeamGreen);
+            _ColonyManager.PlaceColony(new Vector2(-36, 248), GameObjects.Colony.AntTeams.kTeamGreen);
 
-            _ColonyManager.PlaceColony(new Vector2(364, 76), GameObjects.Colony.AntTeams.kTeamBrown);
-            _ColonyManager.PlaceColony(new Vector2(419, 130), GameObjects.Colony.AntTeams.kTeamBrown);
-            _ColonyManager.PlaceColony(new Vector2(356, 194), GameObjects.Colony.AntTeams.kTeamBrown);
+            _ColonyManager.PlaceColony(new Vector2(450, 76), GameObjects.Colony.AntTeams.kTeamBrown);
+            _ColonyManager.PlaceColony(new Vector2(480, 170), GameObjects.Colony.AntTeams.kTeamBrown);
+            _ColonyManager.PlaceColony(new Vector2(450, 254), GameObjects.Colony.AntTeams.kTeamBrown);
 
-            _ColonyManager.PlaceColony(new Vector2(0, 150), GameObjects.Colony.AntTeams.kTeamNone);
+            _ColonyManager.PlaceColony(new Vector2(250, 150), GameObjects.Colony.AntTeams.kTeamNone);
 
 
-            for (int i = 0; i < 10; i++)
-            {
-                GameObjects.FoodPellet pellet = new GameObjects.FoodPellet();
-                pellet.LoadContent(@"Art/StrawberryItem", Content);
-                pellet._Position = new Vector2(50 * i, 50 * i);
-                PelletList.Add(pellet);
-            }
+            _FoodManager.LoadContent(Content);
 
 
         }
@@ -187,6 +182,7 @@ namespace AntGame
 
                 _AntManager.Update(gameTime);
                 _ColonyManager.Update(gameTime);
+                _FoodManager.Update(gameTime);
                 
                 //TODO: Add way for pellets to update and find closest colony of the correct team
                 // way to update queens
@@ -263,7 +259,7 @@ namespace AntGame
             if (InputHelper.RightButtonClicked)
             {
                 bool pelletFound = false;
-                foreach(GameObjects.FoodPellet p in PelletList)
+                foreach(GameObjects.FoodPellet p in _FoodManager.GetAllFoods())
                 {
                     if(p._BoundingBox.Contains(InputHelper.MouseWorldPos))
                     {
@@ -318,6 +314,7 @@ namespace AntGame
 
             _ColonyManager.Draw(spriteBatch);
             _AntManager.Draw(spriteBatch);
+            _FoodManager.Draw(spriteBatch);
 
             if (drawSelectRect) DrawSelectRect(spriteBatch);
 

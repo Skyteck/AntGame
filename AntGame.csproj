@@ -50,6 +50,7 @@
     <Compile Include="GameObjects\Queen.cs" />
     <Compile Include="HelperFunctions.cs" />
     <Compile Include="InputHelper.cs" />
+    <Compile Include="Managers\FoodManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sprite.cs" />

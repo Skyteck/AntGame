@@ -63,6 +63,12 @@ namespace AntGame.GameObjects
 
         public void setColony(Colony c)
         {
+            if(c == null)
+            {
+                targetColony = null;
+                FindColony = false;
+                currentAnts = 0;
+            }
             targetColony = c;
         }
     }

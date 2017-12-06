@@ -26,9 +26,9 @@ namespace AntGame.Managers
             for(int i = 0; i < 50; i++)
             {
                 Colony c = new Colony();
-                c._CurrentState = Sprite.SpriteState.kStateInActive;
                 c.LoadContent("blah", content);
                 c.ChangeTeam(Colony.AntTeams.kTeamNone);
+                c.Deactivate();
                 ColonyList.Add(c);
             }
         }
@@ -68,6 +68,22 @@ namespace AntGame.Managers
                                                    x._Position.Y >= (pos.Y - range) &&
                                                    x._Position.Y <= (pos.Y + range)));
             return ColonyInRange;
+        }
+
+        public Colony FindClosestColony(Vector2 pos)
+        {
+            Colony closest = ColonyList.Find(x => x._CurrentState == Sprite.SpriteState.kStateActive && x.myTeam == Colony.AntTeams.kTeamGreen);
+            float dist = Vector2.Distance(pos, closest._Position);
+            foreach(Colony c in ColonyList.FindAll(x => x._CurrentState == Sprite.SpriteState.kStateActive && x.myTeam == Colony.AntTeams.kTeamGreen))
+            {
+                if(Vector2.Distance(pos, c._Position) < dist)
+                {
+                    dist = Vector2.Distance(pos, c._Position);
+                    closest = c;
+                }
+            }
+
+            return closest;
         }
 
         public void Draw(SpriteBatch sb)

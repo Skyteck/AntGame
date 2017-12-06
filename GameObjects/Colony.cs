@@ -59,8 +59,8 @@ namespace AntGame.GameObjects
             }
 
             currentHP = 10;
-            frameHeight = _Texture.Height;
-            frameWidth = _Texture.Width;
+            frameHeight = 64;
+            frameWidth = 64;
         }
 
         public void ActivateTeam(AntTeams team, Vector2 pos)

@@ -14,15 +14,17 @@ namespace AntGame.Managers
     {
         List<Ant> AntList;
         ColonyManager _ColonyManager;
+        FoodManager _FoodManager;
 
         public AntManager()
         {
             AntList = new List<Ant>();
         }
 
-        public void SetColonyManager(ColonyManager cm)
+        public void SetColonyManager(ColonyManager cm, FoodManager fm)
         {
             _ColonyManager = cm;
+            _FoodManager = fm;
         }
 
         public void CreateAnts(ContentManager content)
@@ -60,14 +62,16 @@ namespace AntGame.Managers
                     {
                         a.Die();
                         bA.Die();
-                        break;
+                        continue;
                     }
                 }
 
-                List<Colony> badColonies = _ColonyManager.FindColoniesNear(a._Position, a.myTeam);
+                List<Colony> badColonies = _ColonyManager.FindColoniesNear(a._Position, a.myTeam, 32);
 
                 foreach(Colony bC in badColonies)
                 {
+                    //if (bC.myTeam == Colony.AntTeams.kTeamNone) continue;
+
                     if(a._BoundingBox.Intersects(bC._BoundingBox))
                     {
                         bC.currentHP--;
@@ -77,8 +81,18 @@ namespace AntGame.Managers
                             bC.ChangeTeam(a.myTeam);
                         }
                         a.Die();
+                        break;
                     }
                 }
+
+                //foreach(FoodPellet fp in _FoodManager.GetFoodsNear(a._Position, 16))
+                //{
+                //    if(a._BoundingBox.Intersects(fp._BoundingBox))
+                //    {
+                //        fp.addAnt(a);
+                //        a.SetPellet(fp);
+                //    }
+                //}
             }
         }
 

@@ -58,9 +58,10 @@ namespace AntGame.GameObjects
         public void ActivateTeam(Colony.AntTeams team, Vector2 pos)
         {
             ChangeTeam(team);
+            base.Activate();
             this._Position = pos;
             this.SetOrbitPoint(pos);
-            base.Activate();
+            ChangeOrbit();
         }
 
         protected override void UpdateActive(GameTime gt)
@@ -232,6 +233,7 @@ namespace AntGame.GameObjects
             orbitPoint = pos;
 
             currentMove = MoveStatus.kMoving;
+            targetPellet = null;
         }
 
         public void ChangeOrbit()
@@ -243,7 +245,7 @@ namespace AntGame.GameObjects
             }
             else
             {
-                newRan = new Random((int)this._Position.X);
+                newRan = new Random((int)this._Position.X+(int)this._Position.Y);
             }
             int num = newRan.Next(3, 8);
             if (num % 2 == 0)
@@ -256,7 +258,7 @@ namespace AntGame.GameObjects
             }
             orbitSpeed = (float)(num / 10.0);
 
-            orbitRadius = newRan.Next(16, 64);
+            orbitRadius = newRan.Next(16, 32);
         }
 
         public void SetPellet(FoodPellet p)
