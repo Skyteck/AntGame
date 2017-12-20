@@ -9,19 +9,74 @@ namespace AntGame.GameObjects
 {
     class FoodPellet : Sprite
     {
-        int weight = 5;
-        int currentAnts = 0;
+        double weight = 10;
+        double currentAnts = 0;
+        List<Ant> antsAttached;
         public bool atColony = false;
         public bool FindColony = false;
         public Colony targetColony = null;
 
+        public Colony.AntTeams myTeam = Colony.AntTeams.kTeamNone;
+
+        public FoodPellet()
+        {
+            antsAttached = new List<Ant>();
+        }
+
         protected override void UpdateActive(GameTime gt)
         {
-            if(currentAnts >= weight)
-            {
-                if (!FindColony) FindColony = true;
+            currentAnts = 0;
+            List<Ant> attchedAnts = new List<Ant>();
+            int GreenCount = 0;
+            int BrownCount = 0;
+            double speed = 50;
 
-                int speed = 25;
+            foreach(Ant a in antsAttached)
+            {
+                if(a._BoundingBox.Intersects(this._BoundingBox))
+                {
+                    currentAnts++;
+                    attchedAnts.Add(a);
+                    if(a.myTeam == Colony.AntTeams.kTeamBrown)
+                    {
+                        BrownCount++;
+                    }
+                    else if(a.myTeam == Colony.AntTeams.kTeamGreen)
+                    {
+                        GreenCount++;
+                    }
+                }
+            }
+            antsAttached.Clear();
+            antsAttached.AddRange(attchedAnts);
+
+            bool flipped = false;
+            if(GreenCount > BrownCount)
+            {
+                if (myTeam == Colony.AntTeams.kTeamBrown) flipped = true;
+                myTeam = Colony.AntTeams.kTeamGreen;
+            }
+            else if(BrownCount > GreenCount)
+            {
+                if (myTeam == Colony.AntTeams.kTeamGreen) flipped = true;
+                myTeam = Colony.AntTeams.kTeamBrown;
+            }
+            
+
+            if(currentAnts >= 1)
+            {
+                speed = (currentAnts / weight) * 50;
+
+                if(speed > 50)
+                {
+                    speed = 50;
+                }
+                if (!FindColony && targetColony == null)
+                {
+                    FindColony = true;
+                }
+                
+                
                 if(currentAnts >= (weight*2))
                 {
                     speed *= 2;
@@ -59,6 +114,7 @@ namespace AntGame.GameObjects
         public void addAnt(Ant a)
         {
             currentAnts++;
+            antsAttached.Add(a);
         }
 
         public void setColony(Colony c)
@@ -70,6 +126,14 @@ namespace AntGame.GameObjects
                 currentAnts = 0;
             }
             targetColony = c;
+        }
+
+        public override void Deactivate()
+        {
+            targetColony = null;
+            FindColony = false;
+            antsAttached.Clear();
+            base.Deactivate();
         }
     }
 }

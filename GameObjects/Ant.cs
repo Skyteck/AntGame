@@ -238,16 +238,16 @@ namespace AntGame.GameObjects
 
         public void ChangeOrbit()
         {
-            Random newRan;
-            if (this._Position == Vector2.Zero)
-            {
-                newRan = new Random();
-            }
-            else
-            {
-                newRan = new Random((int)this._Position.X+(int)this._Position.Y);
-            }
-            int num = newRan.Next(3, 8);
+            //Random newRan;
+            //if (this._Position == Vector2.Zero)
+            //{
+            //    newRan = new Random();
+            //}
+            //else
+            //{
+            //    newRan = new Random((int)this._Position.X+(int)this._Position.Y);
+            //}
+            int num = HelperFunctions.GetRandomNum(3, 8);
             if (num % 2 == 0)
             {
                 orbitClockwise = false;
@@ -258,7 +258,7 @@ namespace AntGame.GameObjects
             }
             orbitSpeed = (float)(num / 10.0);
 
-            orbitRadius = newRan.Next(16, 32);
+            orbitRadius = HelperFunctions.GetRandomNum(16, 32);
         }
 
         public void SetPellet(FoodPellet p)

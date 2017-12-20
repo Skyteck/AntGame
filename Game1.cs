@@ -112,7 +112,7 @@ namespace AntGame
             _ColonyManager = new Managers.ColonyManager(_AntManager);
             _FoodManager = new Managers.FoodManager(_ColonyManager);
             _AntManager.SetColonyManager(_ColonyManager, _FoodManager);
-
+            _ColonyManager.SetManagers(_FoodManager);
             InputHelper.Init(camera);
             base.Initialize();
 
@@ -245,6 +245,7 @@ namespace AntGame
             {
                 SelectedAnts.Clear();
                 mouseClickPos = InputHelper.MouseWorldPos;
+                Console.WriteLine(mouseClickPos);
             }
             if(InputHelper.LeftButtonHeld)
             {
@@ -286,7 +287,7 @@ namespace AntGame
 
         private void CheckSelectedAnts()
         {
-            foreach(GameObjects.Ant a in _AntManager.GetAntsOnTeam(GameObjects.Colony.AntTeams.kTeamGreen))
+            foreach(GameObjects.Ant a in _AntManager.GetAllAnts())
             {
                 if(a._BoundingBox.Intersects(SelectRect))
                 {

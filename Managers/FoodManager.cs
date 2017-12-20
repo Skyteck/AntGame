@@ -15,7 +15,8 @@ namespace AntGame.Managers
 
         List<FoodPellet> PelletList;
         ColonyManager _ColonyManager;
-        public int queenCount = 0;
+        public int foodCount = 3;
+        public int enemyFood = 3;
         double SpawnTimer = 15.0;
 
         public FoodManager(ColonyManager cm)
@@ -40,21 +41,29 @@ namespace AntGame.Managers
 
         public void Update(GameTime gt)
         {
-            foreach(FoodPellet p in PelletList)
+            foreach(FoodPellet p in PelletList.FindAll(x=>x._CurrentState == Sprite.SpriteState.kStateActive))
             {
                 p.Update(gt);
 
                 if(p.FindColony)
                 {
-                    p.setColony(_ColonyManager.FindClosestColony(p._Position));
+                    p.setColony(_ColonyManager.FindClosestColony(p._Position, p.myTeam));
                 }
 
-                foreach(Colony c in _ColonyManager.FindColoniesNear(p._Position, Colony.AntTeams.kTeamBrown))
+
+
+                foreach(Colony c in _ColonyManager.GetColoniesOnTeam( p.myTeam))
                 {
                     if(p._BoundingBox.Intersects(c._BoundingBox))
                     {
-                        queenCount++;
-                        p.setColony(null);
+                        if(p.myTeam == Colony.AntTeams.kTeamGreen)
+                        {
+                            foodCount++;
+                        }
+                        else if(p.myTeam == Colony.AntTeams.kTeamBrown)
+                        {
+                            enemyFood++;
+                        }
                         p.Deactivate();
                         break;
                     }
@@ -74,10 +83,9 @@ namespace AntGame.Managers
 
         public void CreatePellet()
         {
-            Random ran = new Random();
             Vector2 newPos = Vector2.Zero;
-            newPos.X = ran.Next(-200, 300);
-            newPos.Y = ran.Next(-200, 300);
+            newPos.X = HelperFunctions.GetRandomNum(-150, 630);
+            newPos.Y = HelperFunctions.GetRandomNum(-70, 390);
             CreatePellet(newPos);
         }
 

@@ -9,6 +9,12 @@ namespace AntGame
 {
     public static class HelperFunctions
     {
+        static Random myRan;
+
+        public static void Init()
+        {
+            myRan = new Random();
+        }
 
         public static List<Vector2> RectToList(Rectangle rect)
         {
@@ -68,6 +74,16 @@ namespace AntGame
                 }
             }
             return output;
+        }
+
+        public static int GetRandomNum(int min = 0, int max = 10000000)
+        {
+            if(myRan == null)
+            {
+                Init();
+            }
+
+            return myRan.Next(min, max);
         }
     }
 }

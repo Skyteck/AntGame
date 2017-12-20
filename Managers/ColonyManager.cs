@@ -14,11 +14,17 @@ namespace AntGame.Managers
     {
         List<Colony> ColonyList;
         AntManager _AntManager;
+        FoodManager _FoodManager;
 
         public ColonyManager(AntManager am)
         {
             ColonyList = new List<Colony>();
             _AntManager = am;
+        }
+
+        public void SetManagers(FoodManager fm)
+        {
+            _FoodManager = fm;
         }
 
         public void CreateColonies(ContentManager content)
@@ -41,6 +47,19 @@ namespace AntGame.Managers
 
         public void Update(GameTime gt)
         {
+            bool playerCanBuild = false;
+            bool playerBuilt = false;
+            bool enemyCanBuild = false;
+            bool enemyBuilt = false;
+
+            if(_FoodManager.foodCount > 0)
+            {
+                playerCanBuild = true;
+            }
+            if(_FoodManager.enemyFood > 0)
+            {
+                enemyCanBuild = true;
+            }
             foreach(Colony c in ColonyList)
             {
                 c.Update(gt);
@@ -49,10 +68,30 @@ namespace AntGame.Managers
                 {
                     if(c.SpawnTimer <= 0.0f)
                     {
-                        c.SpawnTimer = 5.0f;
-                        _AntManager.AddAnt(c.myTeam, c._Position);
+                        if(c.myTeam == Colony.AntTeams.kTeamGreen && playerCanBuild)
+                        {
+                            c.SpawnTimer = 0.1f;
+                            _AntManager.AddAnt(c.myTeam, c._Position);
+
+                            playerBuilt = true;
+                        }
+                        else if (c.myTeam == Colony.AntTeams.kTeamBrown && enemyCanBuild)
+                        {
+                            c.SpawnTimer = 0.1f;
+                            _AntManager.AddAnt(c.myTeam, c._Position);
+
+                            enemyBuilt = true;
+                        }
                     }
                 }
+            }
+            if(playerBuilt)
+            {
+                _FoodManager.foodCount--;
+            }
+            if(enemyBuilt)
+            {
+                _FoodManager.enemyFood--;
             }
         }
 
@@ -70,11 +109,11 @@ namespace AntGame.Managers
             return ColonyInRange;
         }
 
-        public Colony FindClosestColony(Vector2 pos)
+        public Colony FindClosestColony(Vector2 pos, Colony.AntTeams team)
         {
-            Colony closest = ColonyList.Find(x => x._CurrentState == Sprite.SpriteState.kStateActive && x.myTeam == Colony.AntTeams.kTeamGreen);
+            Colony closest = ColonyList.Find(x => x._CurrentState == Sprite.SpriteState.kStateActive && x.myTeam == team);
             float dist = Vector2.Distance(pos, closest._Position);
-            foreach(Colony c in ColonyList.FindAll(x => x._CurrentState == Sprite.SpriteState.kStateActive && x.myTeam == Colony.AntTeams.kTeamGreen))
+            foreach(Colony c in ColonyList.FindAll(x => x._CurrentState == Sprite.SpriteState.kStateActive && x.myTeam == team))
             {
                 if(Vector2.Distance(pos, c._Position) < dist)
                 {
@@ -84,6 +123,11 @@ namespace AntGame.Managers
             }
 
             return closest;
+        }
+
+        public List<Colony> GetColoniesOnTeam(Colony.AntTeams team)
+        {
+            return ColonyList.FindAll(x => x._CurrentState == Sprite.SpriteState.kStateActive && x.myTeam == team);
         }
 
         public void Draw(SpriteBatch sb)

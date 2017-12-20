@@ -13,12 +13,14 @@ namespace AntGame.Managers
     class AntManager
     {
         List<Ant> AntList;
+        List<Ant> ActiveAnts;
         ColonyManager _ColonyManager;
         FoodManager _FoodManager;
 
         public AntManager()
         {
             AntList = new List<Ant>();
+            ActiveAnts = new List<Ant>();
         }
 
         public void SetColonyManager(ColonyManager cm, FoodManager fm)
@@ -29,7 +31,7 @@ namespace AntGame.Managers
 
         public void CreateAnts(ContentManager content)
         {
-            for(int i = 0; i < 10000; i++)
+            for(int i = 0; i < 2000; i++)
             {
                 Ant a = new Ant();
                 a.LoadContent(content);
@@ -50,13 +52,24 @@ namespace AntGame.Managers
 
         public void Update(GameTime gt)
         {
-            foreach(Ant a in AntList.Where(x=>x._CurrentState == Sprite.SpriteState.kStateActive))
+            ActiveAnts.Clear();
+            ActiveAnts.AddRange(AntList.FindAll(x => x._CurrentState == Sprite.SpriteState.kStateActive));
+            List<Ant> goodAnts = GetAntsOnTeam(Colony.AntTeams.kTeamGreen);
+            List<Ant> badAnts = GetAntsOnTeam(Colony.AntTeams.kTeamBrown);
+            foreach(Ant a in ActiveAnts)
             {
                 a.Update(gt);
+                List<Ant> otherTeam = new List<Ant>();
+                if(a.myTeam == Colony.AntTeams.kTeamGreen)
+                {
+                    otherTeam.AddRange(badAnts);
+                }
+                else
+                {
+                    otherTeam.AddRange(goodAnts);
+                }
 
-                List<Ant> badAnts = FindAntsNear(a._Position, a.myTeam);
-
-                foreach(Ant bA in badAnts)
+                foreach(Ant bA in otherTeam)
                 {
                     if(a._BoundingBox.Intersects(bA._BoundingBox))
                     {
@@ -71,6 +84,7 @@ namespace AntGame.Managers
                 foreach(Colony bC in badColonies)
                 {
                     //if (bC.myTeam == Colony.AntTeams.kTeamNone) continue;
+                    if (bC.myTeam == a.myTeam) continue;
 
                     if(a._BoundingBox.Intersects(bC._BoundingBox))
                     {
@@ -98,13 +112,17 @@ namespace AntGame.Managers
 
         public List<Ant> GetAntsOnTeam(Colony.AntTeams team)
         {
-            return AntList.FindAll(x => x.myTeam == team && x._CurrentState == Sprite.SpriteState.kStateActive);
+            return ActiveAnts.FindAll(x => x.myTeam == team);
         }
 
+        public List<Ant> GetAllAnts()
+        {
+            return ActiveAnts;
+        }
         private List<Ant> FindAntsNear(Vector2 pos, Colony.AntTeams team ,int range = 15)
         {
             List<Ant> ants = new List<Ant>();
-            ants.AddRange(AntList.FindAll(x => x.myTeam != team && x._CurrentState == Sprite.SpriteState.kStateActive));
+            ants.AddRange(ActiveAnts.FindAll(x => x.myTeam != team ));
 
             //got active ants not on the sent in team
             List<Ant> antsInRange = new List<Ant>();
@@ -117,7 +135,7 @@ namespace AntGame.Managers
 
         public void Draw(SpriteBatch sb)
         {
-            foreach(Ant a in AntList)
+            foreach(Ant a in ActiveAnts)
             {
                 a.Draw(sb);
             }
